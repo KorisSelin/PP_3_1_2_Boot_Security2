@@ -46,7 +46,6 @@ public class UserDetails implements org.springframework.security.core.userdetail
     public boolean isEnabled() {
         return true;
     }
-
     public User getUser() {
         return this.user;
     }

@@ -8,7 +8,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import ru.kata.spring.boot_security.demo.service.UserService;
+import ru.kata.spring.boot_security.demo.services.UserService;
 
 import java.util.Collections;
 
@@ -25,15 +25,15 @@ public class AuthProviderImpl implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String username = authentication.getName();
         UserDetails userDetails = userService.loadUserByUsername(username);
-        String passwodr = authentication.getCredentials().toString();
-        if(!passwodr.equals(userDetails.getPassword()))
-            throw new BadCredentialsException("Incorrent password");
-            return new UsernamePasswordAuthenticationToken(userDetails, passwodr,
+        String password = authentication.getCredentials().toString();
+        if (!password.equals(userDetails.getPassword()))
+            throw new BadCredentialsException("Incorrect password");
+        return new UsernamePasswordAuthenticationToken(userDetails, password,
                     Collections.emptyList());
     }
 
     @Override
     public boolean supports(Class<?> authentication) {
-        return false;
+        return true;
     }
 }

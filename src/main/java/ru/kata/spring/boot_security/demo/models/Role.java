@@ -41,9 +41,6 @@ public class Role implements GrantedAuthority {
     public Long getId() {return id;}
     public String getName() {return name;}
 
-//    public Set<User> getUserByrole() {return userByrole;}
-//    public void setUserByrole(Set<User> userByrole) {this.userByrole = userByrole;}
-
 
     @Override
     public String getAuthority() {return getName();}

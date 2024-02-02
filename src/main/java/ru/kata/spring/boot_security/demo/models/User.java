@@ -5,6 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 import java.util.Collection;
 import java.util.Set;
 
@@ -15,17 +16,17 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
+    @NotEmpty
     @Column(name = "username")
     private String username;
     @Column(name = "password")
     private String password;
     @Transient
     private String confirmPassword;
-
     @Column(name = "first_name")
-    private String first_name;
+    private String firstName;
     @Column(name = "last_name")
-    private String last_name;
+    private String lastName;
     @Column(name = "age")
     private int age;
     @Email
@@ -37,14 +38,13 @@ public class User implements UserDetails {
     inverseJoinColumns = @JoinColumn(name = "roles_id"))
     private Set<Role> roles;
 
-
     public User() {
     }
     public User(String username, String password, String first_name, String last_name, int age, String email, Set<Role> roles) {
         this.username = username;
         this.password = password;
-        this.first_name = first_name;
-        this.last_name = last_name;
+        this.firstName = first_name;
+        this.lastName = last_name;
         this.age = age;
         this.email = email;
         this.roles = roles;
@@ -53,18 +53,21 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return getRoles();
     }
 
-    @Override
+
     public String getPassword() {
         return password;
     }
     public void setPassword ( String password){this.password = password;}
 
-    @Override
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     public String getUsername() {
-        return null;
+        return username;
     }
 
     @Override
@@ -88,17 +91,11 @@ public class User implements UserDetails {
     }
 
 
-    public Long getId() {
-        return id;
-    }
-
+    public Long getId() {return id;}
     public void setId(Long id) {
         this.id = id;
     }
 
-    public void setUserName(String username) {
-        this.username = username;
-    }
 
     public String getConfirmPassword() {
         return confirmPassword;
@@ -109,19 +106,19 @@ public class User implements UserDetails {
     }
 
     public String getFirstName() {
-        return first_name;
+        return firstName;
     }
 
     public void setFirstName(String first_name) {
-        this.first_name = first_name;
+        this.firstName = first_name;
     }
 
     public String getLastName() {
-        return last_name;
+        return lastName;
     }
 
     public void setLastName(String last_name) {
-        this.last_name = last_name;
+        this.lastName = last_name;
     }
 
     public int getAge() {
@@ -140,9 +137,7 @@ public class User implements UserDetails {
         this.email = email;
     }
 
-    public Set<Role> getRoles() {
-        return roles;
-    }
+    public Set<Role> getRoles() {return roles;}
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
