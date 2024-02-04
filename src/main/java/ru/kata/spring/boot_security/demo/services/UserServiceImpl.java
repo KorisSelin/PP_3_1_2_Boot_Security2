@@ -39,10 +39,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Transactional
     @Override
     public void deleteUserById(long id) {
-        if (userRepository.findById(id).isPresent()){
             userRepository.deleteById(id);
-        } else throw new UsernameNotFoundException(String.format("User with id '%s' not founded!", id ));
     }
+//    public void deleteUserById(long id) {
+//        if (userRepository.findById(id).isPresent()){
+//            userRepository.deleteById(id);
+//        } else throw new UsernameNotFoundException(String.format("User with id '%s' not founded!", id ));
+//    }
 
 
     @Transactional
@@ -61,18 +64,24 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     @Transactional
-    public void updateUser(Long id, User updatedUser) {
-            User userToUpdate = userRepository.getById(id);
-            userToUpdate.setUsername(updatedUser.getUsername());
-            userToUpdate.setPassword(updatedUser.getPassword());
-            userToUpdate.setConfirmPassword(updatedUser.getConfirmPassword());
-            userToUpdate.setFirstName(updatedUser.getFirstName());
-            userToUpdate.setLastName(updatedUser.getLastName());
-            userToUpdate.setAge(updatedUser.getAge());
-            userToUpdate.setEmail(updatedUser.getEmail());
-            userToUpdate.setRoles(updatedUser.getRoles());
-            userRepository.save(userToUpdate);
+    public void updateUser( User updatedUser) {
+        updatedUser.setPassword(new BCryptPasswordEncoder().encode(updatedUser.getPassword()));
+        userRepository.save(updatedUser);
     }
+//    public void updateUser( User updatedUser) {
+//            User userToUpdate = userRepository.getById(id);
+//            userToUpdate.setUsername(updatedUser.getUsername());
+//            userToUpdate.setPassword(updatedUser.getPassword());
+//            userToUpdate.setConfirmPassword(updatedUser.getConfirmPassword());
+//            userToUpdate.setFirstName(updatedUser.getFirstName());
+//            userToUpdate.setLastName(updatedUser.getLastName());
+//            userToUpdate.setAge(updatedUser.getAge());
+//            userToUpdate.setEmail(updatedUser.getEmail());
+//            userToUpdate.setRoles(updatedUser.getRoles());
+//            userRepository.save(userToUpdate);
+//    }
+
+
 
     @Override
     @Transactional
