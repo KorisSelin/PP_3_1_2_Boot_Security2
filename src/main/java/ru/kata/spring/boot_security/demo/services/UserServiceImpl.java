@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.repositories.UserRepository;
 
-//import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,11 +40,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public void deleteUserById(long id) {
             userRepository.deleteById(id);
     }
-//    public void deleteUserById(long id) {
-//        if (userRepository.findById(id).isPresent()){
-//            userRepository.deleteById(id);
-//        } else throw new UsernameNotFoundException(String.format("User with id '%s' not founded!", id ));
-//    }
 
 
     @Transactional
@@ -68,28 +62,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         updatedUser.setPassword(new BCryptPasswordEncoder().encode(updatedUser.getPassword()));
         userRepository.save(updatedUser);
     }
-//    public void updateUser( User updatedUser) {
-//            User userToUpdate = userRepository.getById(id);
-//            userToUpdate.setUsername(updatedUser.getUsername());
-//            userToUpdate.setPassword(updatedUser.getPassword());
-//            userToUpdate.setConfirmPassword(updatedUser.getConfirmPassword());
-//            userToUpdate.setFirstName(updatedUser.getFirstName());
-//            userToUpdate.setLastName(updatedUser.getLastName());
-//            userToUpdate.setAge(updatedUser.getAge());
-//            userToUpdate.setEmail(updatedUser.getEmail());
-//            userToUpdate.setRoles(updatedUser.getRoles());
-//            userRepository.save(userToUpdate);
-//    }
-
-
 
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> user = Optional.ofNullable(userRepository.findUserByUsername(username));
-        if (user.isEmpty()){
-            throw new UsernameNotFoundException(String.format("User '%s' not found!", username ));
+        User user = userRepository.findUserByUsername(username);
+        if (user == null) {
+            throw new UsernameNotFoundException(String.format("User '%s' not found!", username));
         }
-        return new ru.kata.spring.boot_security.demo.security.UserDetails(user.get());
+        return user;
     }
 }
