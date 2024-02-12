@@ -62,7 +62,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 //        updatedUser.setPassword(new BCryptPasswordEncoder().encode(updatedUser.getPassword()));
 //        userRepository.save(updatedUser);
 //    }
-
+    @Override
+    @Transactional
     public void updateUser(User updatedUser) {
         // Проверяем, существует ли пользователь
         Optional<User> existingUserOptional = userRepository.findById(updatedUser.getId());
