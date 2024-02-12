@@ -56,12 +56,32 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public User getUserByUsername(String username) {return userRepository.findUserByUsername(username);}
 
-    @Override
-    @Transactional
-    public void updateUser( User updatedUser) {
-        updatedUser.setPassword(new BCryptPasswordEncoder().encode(updatedUser.getPassword()));
-        userRepository.save(updatedUser);
+//    @Override
+//    @Transactional
+//    public void updateUser( User updatedUser) {
+//        updatedUser.setPassword(new BCryptPasswordEncoder().encode(updatedUser.getPassword()));
+//        userRepository.save(updatedUser);
+//    }
+
+    public void updateUser(User updatedUser) {
+        // Проверяем, существует ли пользователь
+        Optional<User> existingUserOptional = userRepository.findById(updatedUser.getId());
+        if (existingUserOptional.isPresent()) {
+            User existingUser = existingUserOptional.get();
+
+            // Проверяем, изменился ли пароль
+            if (!updatedUser.getPassword().equals(existingUser.getPassword())) {
+                updatedUser.setPassword(new BCryptPasswordEncoder().encode(updatedUser.getPassword()));
+            }
+            // Сохраняем обновленного пользователя
+            userRepository.save(updatedUser);
+        } else {
+            throw new UsernameNotFoundException(String.format("User with id '%s' not found", updatedUser.getId()));
+        }
     }
+
+
+
 
     @Override
     @Transactional
